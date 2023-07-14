@@ -5,11 +5,12 @@ public class Solution
     public bool WordBreak(string s, IList<string> wordDict)
     {
         var r = s;
-        foreach (var w in wordDict)
+        for (int i = 0; i < wordDict.Count; i++)
         {
-            var pos = r.IndexOf(w);
-            while (pos >= 0)
+            string? w = wordDict[i];
+            while (true)
             {
+                var pos = r.IndexOf(w);
                 if (pos >= 0)
                 {
                     r = r.Remove(pos, w.Length);
@@ -18,8 +19,6 @@ public class Solution
                 {
                     break;
                 }
-
-                pos = r.IndexOf(w);
             }
             if (r.Length == 0)
             {
