@@ -2,78 +2,45 @@
 
 public class Solution
 {
+    Dictionary<string, bool> valuePairs = new Dictionary<string, bool>();
+
     public bool WordBreak(string s, IList<string> wordDict)
     {
         if (string.IsNullOrEmpty(s) || wordDict == null || wordDict.Count == 0)
         {
             return false;
         }
-        var isSameChars = s.Distinct().Count() == 1 && wordDict.All(x => x[0] == s[0] && x.Distinct().Count() == 1);
-        var maxItemLength = wordDict.Aggregate((max, cur) => max.Length > cur.Length ? max : cur).Length;
-        var idx = isSameChars ? s.Length : 0;
-        var length = isSameChars ? maxItemLength : 1;
-        while (true)
+
+        if (valuePairs.ContainsKey(s))
         {
-            if (isSameChars)
+            return valuePairs[s];
+        }
+
+        if (wordDict.Contains(s))
+        {
+            valuePairs[s] = true;
+            return true;
+        }
+
+        List<string> startsWith = new List<string>();
+        foreach (string w in wordDict)
+        {
+            if (s.StartsWith(w))
             {
-                var sb = s.Substring(idx - length, length);
-                var found = wordDict.Contains(sb);
-                if (found)
-                {
-                    idx -= length;
-                    length = 1;
-                }
-                else
-                {
-                    length++;
-                }
-                if (idx == 0 || idx - length < 0)
-                {
-                    return found;
-                }
-            }
-            else
-            {
-                var found = GetWordBreakResult(s, wordDict, idx, length, out int newIdx, out int newLength);
-                if (found)
-                {
-                    idx = newIdx;
-                    length = newLength;
-                }
-                else
-                {
-                    length++;
-                }
-                if (idx == s.Length || idx + length > s.Length)
-                {
-                    return found;
-                }
+                startsWith.Add(w.Substring(0, w.Length));
             }
         }
-    }
 
-    private bool GetWordBreakResult(string s, IList<string> wordDict, int idx, int length, out int newIdx, out int newLength)
-    {
-        newIdx = idx;
-        newLength = length;
-
-        while (true)
+        foreach (string sw in startsWith)
         {
-            var sb = s.Substring(newIdx, newLength);
-            var found = wordDict.Contains(sb);
-            if (found)
+            if (WordBreak(s.Substring(sw.Length), wordDict))
             {
-                newIdx += newLength;
-                newLength = 1;
-            }
-            else
-            {
-                newLength++;
-            }
-            if (newIdx == s.Length || newIdx + newLength > s.Length)
-            {
-                return found;
+                valuePairs[s] = true;
+                return true;
             }
         }
+
+        valuePairs[s] = false;
+        return false;
     }
 }

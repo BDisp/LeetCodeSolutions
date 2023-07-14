@@ -16,6 +16,7 @@ public class LeetCodeSolutionsTests : Solution
     [InlineData("cars", new string[] { "car", "ca", "rs" }, true)]
     [InlineData("aaaaaaa", new string[] { "aaaa", "aaa" }, true)]
     [InlineData("goalspecial", new string[] { "go", "goal", "goals", "special" }, true)]
+    [InlineData("aebbbbs", new string[] { "a", "aeb", "ebbbb", "s", "eb" }, true)]
     public void WordBreakTests(string s, IList<string> wordDict, bool expected)
     {
         Assert.Equal(expected, WordBreak(s, wordDict));
