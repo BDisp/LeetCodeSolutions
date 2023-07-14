@@ -1,11 +1,13 @@
-﻿using System.Linq;
-
-namespace LeetCodeSolutions;
+﻿namespace LeetCodeSolutions;
 
 public class Solution
 {
     public bool WordBreak(string s, IList<string> wordDict)
     {
+        if (string.IsNullOrEmpty(s) || wordDict == null || wordDict.Count == 0)
+        {
+            return false;
+        }
         var isSameChars = s.Distinct().Count() == 1 && wordDict.All(x => x[0] == s[0] && x.Distinct().Count() == 1);
         var maxItemLength = wordDict.Aggregate((max, cur) => max.Length > cur.Length ? max : cur).Length;
         var idx = isSameChars ? s.Length : 0;
@@ -32,12 +34,11 @@ public class Solution
             }
             else
             {
-                var sb = s.Substring(idx, length);
-                var found = wordDict.Contains(sb);
+                var found = GetWordBreakResult(s, wordDict, idx, length, out int newIdx, out int newLength);
                 if (found)
                 {
-                    idx += length;
-                    length = 1;
+                    idx = newIdx;
+                    length = newLength;
                 }
                 else
                 {
@@ -47,6 +48,31 @@ public class Solution
                 {
                     return found;
                 }
+            }
+        }
+    }
+
+    private bool GetWordBreakResult(string s, IList<string> wordDict, int idx, int length, out int newIdx, out int newLength)
+    {
+        newIdx = idx;
+        newLength = length;
+
+        while (true)
+        {
+            var sb = s.Substring(newIdx, newLength);
+            var found = wordDict.Contains(sb);
+            if (found)
+            {
+                newIdx += newLength;
+                newLength = 1;
+            }
+            else
+            {
+                newLength++;
+            }
+            if (newIdx == s.Length || newIdx + newLength > s.Length)
+            {
+                return found;
             }
         }
     }
