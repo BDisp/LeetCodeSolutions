@@ -21,4 +21,15 @@ public class LeetCodeSolutionsTests : Solution
     {
         Assert.Equal(expected, WordBreak(s, wordDict));
     }
+
+    [Theory]
+    [InlineData(null, 0)]
+    [InlineData(new int[] { }, 0)]
+    [InlineData(new int[] { 10, 9, 2, 5, 3, 7, 101, 18 }, 4)]
+    [InlineData(new int[] { 0, 1, 0, 3, 2, 3 }, 4)]
+    [InlineData(new int[] { 7, 7, 7, 7, 7, 7, 7 }, 1)]
+    public void LengthOfLISTests(int[] nums, int expected)
+    {
+        Assert.Equal(expected, LengthOfLIS(nums));
+    }
 }
