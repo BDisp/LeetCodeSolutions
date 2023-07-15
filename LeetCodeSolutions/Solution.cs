@@ -50,47 +50,18 @@ public class Solution
         {
             return 0;
         }
-        var pred = new int[nums.Length];
-        var mids = new int[nums.Length + 1];
-        mids[0] = -1;
 
-        var longest = 0;
-        for (int i = 0; i < nums.Length; i++)
+        var sortedNums = new List<int>();
+
+        foreach (var n in nums)
         {
-            var lo = 1;
-            var hi = longest + 1;
-            while (lo < hi)
-            {
-                var mid = lo + (int)Math.Floor((double)(hi - lo) / 2);
-                if (nums[mids[mid]] >= nums[i])
-                {
-                    hi = mid;
-                }
-                else
-                {
-                    lo = mid + 1;
-                }
-            }
-            var newlongest = lo;
+            var idx = sortedNums.BinarySearch(n);
+            if (idx < 0) idx = -(idx + 1);
 
-            pred[i] = mids[newlongest - 1];
-            mids[newlongest] = i;
-
-            if (newlongest > longest)
-            {
-                longest = newlongest;
-            }
+            if (idx == sortedNums.Count) sortedNums.Add(n);
+            else sortedNums[idx] = n;
         }
 
-        var subSeq = new int[longest];
-        var longestMid = mids[longest];
-
-        for (int j = longest - 1; j >= 0; j--)
-        {
-            subSeq[j] = nums[longestMid];
-            longestMid = pred[longestMid];
-        }
-
-        return subSeq.Distinct().Count();
+        return sortedNums.Count;
     }
 }
